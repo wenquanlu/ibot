@@ -27,14 +27,14 @@ fi
 # pre-training
 if [[ $TYPE =~ pretrain ]]; then
     echo "==> Starting pretrainin iBOT."
-    python3 -m torch.distributed.launch --nnodes ${TOTAL_NODES:-1} \
-        --node_rank ${NODE_ID:-0} --nproc_per_node=$GPUS_PER_NODE \
+    python3 -m torch.distributed.launch --nnodes 1 \
+        --node_rank 0 --nproc_per_node=1 \
         --master_addr=${MASTER_ADDR:-127.0.0.1} \
         --master_port=${MASTER_PORT:-29500} \
         $CURDIR/main_ibot.py \
         --arch $ARCH \
         --output_dir $OUTPUT_DIR \
-        --data_path data/imagenet/train \
+        --data_path noisy_mini-imagenet-gauss100-denoised/train \
         ${@:6}
 fi
 
@@ -132,7 +132,7 @@ if [[ $TYPE =~ imagenet_knn ]] || [[ $TYPE =~ imagenet_reg ]] || \
                     --arch ${ARCH} \
                     --checkpoint_key ${KEY_LIST[$K]} \
                     --output_dir $SUB_OUTPUT_DIR \
-                    --data_path data/imagenet \
+                    --data_path $DATASET \
                     ${@:6}
             elif [[ $TYPE =~ imagenet_linear ]] && [[ ! $TYPE =~ pretrain ]]; then
                 SUB_OUTPUT_DIR=$OUTPUT_DIR/linear
@@ -145,7 +145,7 @@ if [[ $TYPE =~ imagenet_knn ]] || [[ $TYPE =~ imagenet_reg ]] || \
                     --arch $ARCH \
                     --checkpoint_key ${KEY_LIST[$K]} \
                     --output_dir $SUB_OUTPUT_DIR \
-                    --data_path data/imagenet \
+                    --data_path $DATASET \
                     ${@:6}
             else
                 SUB_OUTPUT_DIR=$OUTPUT_DIR/linear
@@ -158,7 +158,7 @@ if [[ $TYPE =~ imagenet_knn ]] || [[ $TYPE =~ imagenet_reg ]] || \
                     --arch $ARCH \
                     --checkpoint_key ${KEY_LIST[$K]} \
                     --output_dir $SUB_OUTPUT_DIR \
-                    --data_path data/imagenet
+                    --data_path $DATASET
             fi
         done
     fi

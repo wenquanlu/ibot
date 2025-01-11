@@ -1,0 +1,13 @@
+./run.sh imagenet_pretrain denoised_training2 vit_small teacher 1 \
+  --teacher_temp 0.07 \
+  --warmup_teacher_temp_epochs 10 \
+  --norm_last_layer false \
+  --epochs 200 \
+  --batch_size_per_gpu 80 \
+  --shared_head true \
+  --out_dim 8192 \
+  --local_crops_number 10 \
+  --global_crops_scale 0.25 1 \
+  --local_crops_scale 0.05 0.25 \
+  --pred_ratio 0 0.3 \
+  --pred_ratio_var 0 0.2
